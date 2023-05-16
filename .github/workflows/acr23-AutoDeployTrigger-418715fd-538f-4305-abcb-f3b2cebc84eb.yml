@@ -1,0 +1,42 @@
+name: Trigger auto deployment for acr23
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - 'D_AKS/Azure-DevOps-Docker-Image-To-ACR/aspnet-core-dotnet-core /**'
+    - '.github/workflows/acr23-AutoDeployTrigger-418715fd-538f-4305-abcb-f3b2cebc84eb.yml'
+
+  # Allow mannually trigger 
+  workflow_dispatch:
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.ACR23_AZURE_CREDENTIALS }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          appSourcePath: ${{ github.workspace }}D_AKS/Azure-DevOps-Docker-Image-To-ACR/aspnet-core-dotnet-core  
+          registryUrl: cont23.azurecr.io
+          registryUsername: ${{ secrets.ACR23_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.ACR23_REGISTRY_PASSWORD }}
+          containerAppName: acr23
+          resourceGroup: AKS
+          imageToBuild: cont23.azurecr.io/acr23:${{ github.sha }}
+          dockerfilePath: Dockerfile
+
+     
+

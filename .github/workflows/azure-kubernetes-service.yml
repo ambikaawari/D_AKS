@@ -7,7 +7,7 @@ on:
 
 env:
   AZURE_CONTAINER_REGISTRY: "cont23"
-  CONTAINER_NAME: "aks_d"
+  CONTAINER_NAME: "/dockerimg23:1388"
   RESOURCE_GROUP: "AKS"
   CLUSTER_NAME: "AKS-Cluster-AA-23"
   DEPLOYMENT_MANIFEST_PATH: "manifests/deployment.yml"
@@ -33,6 +33,7 @@ jobs:
       - name: Build and push image to ACR
         run: |
           az acr build --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }} --registry ${{ env.AZURE_CONTAINER_REGISTRY }} -g ${{ env.RESOURCE_GROUP }} .
+                                         
   deploy:
     permissions:
       actions: read

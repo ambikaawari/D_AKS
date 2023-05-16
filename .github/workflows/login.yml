@@ -13,6 +13,20 @@ env:
   DEPLOYMENT_MANIFEST_PATH: "manifests/deployment.yml"
 
 jobs:
+  install_az_cli:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+ 
+
+    - name: Install Azure CLI
+      run: |
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+        az --version  # Verify installation
+        
   buildImage:
     permissions:
       contents: read
